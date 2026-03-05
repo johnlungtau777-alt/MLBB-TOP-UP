@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamond Topup</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0e0e0e;
+color:white;
+}
+
+.container{
+padding:15px;
+}
+
+h2{
+color:#f5b642;
+margin-top:20px;
+}
+
+input, select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:8px;
+border:none;
+}
+
+.category{
+display:flex;
+gap:10px;
+overflow-x:auto;
+margin-bottom:15px;
+}
+
+.cat-btn{
+background:#1e1e1e;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+white-space:nowrap;
+}
+
+.cat-btn.active{
+background:#f5b642;
+color:black;
+font-weight:bold;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.card{
+background:#1a1a1a;
+padding:15px;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+border:2px solid transparent;
+transition:0.2s;
+}
+
+.card.selected{
+border:2px solid #f5b642;
+background:#262626;
+}
+
+.price{
+margin-top:8px;
+font-weight:bold;
+color:#f5b642;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:20px;
+border:none;
+border-radius:8px;
+background:#f5b642;
+font-size:16px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Enter Details</h2>
+
+<input type="text" id="userid" placeholder="Enter User ID">
+<input type="text" id="zoneid" placeholder="Enter Zone ID">
+
+<select id="country">
+<option value="">Select Country</option>
+<option>India</option>
+<option>Bangladesh</option>
+<option>Nepal</option>
+<option>Indonesia</option>
+</select>
+
+<h2>Choose Category</h2>
+
+<div class="category">
+<div class="cat-btn active" onclick="loadCategory('weekly',this)">Weekly</div>
+<div class="cat-btn" onclick="loadCategory('diamond',this)">Diamonds</div>
+<div class="cat-btn" onclick="loadCategory('double',this)">Double</div>
+<div class="cat-btn" onclick="loadCategory('small',this)">Smallpacks</div>
+</div>
+
+<div class="grid" id="packages"></div>
+
+<button onclick="sendToWhatsApp()">Proceed to WhatsApp</button>
+
+</div>
+
+<script>
+
+var selectedPackage="";
+var packages={
+// These are **for the site** — no emojis
+weekly:[
+["Weekly Pass 1x","₹148"],
+["Weekly Pass 2x","₹293"],
+["Weekly Pass 3x","₹438"],
+["Weekly Pass 4x","₹583"],
+["Weekly Pass 5x","₹728"],
+["Twilight Pass","₹802"]
+],
+diamond:[
+["50+5","₹84"],
+["78+8","₹125"],
+["100+10","₹161"],
+["156+16","₹245"],
+["234+23","₹356"],
+["275+225","₹377"],
+["312+31","₹478"],
+["390+39","₹597"]
+],
+double:[
+["55+45","₹85"],
+["165+135","₹236"],
+["275+225","₹378"],
+["565+435","₹770"]
+],
+small:[
+["3+0","₹13"],
+["5+0","₹15"],
+["10+1","₹23"],
+["20+2","₹41"],
+["51+5","₹95"],
+["102+10","₹175"],
+["504+66","₹839"],
+["1007+156","₹1658"]
+]
+};
+
+function loadCategory(type,btn){
+
+document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+
+var container=document.getElementById("packages");
+container.innerHTML="";
+selectedPackage="";
+
+packages[type].forEach(function(item){
+var div=document.createElement("div");
+div.className="card";
+div.innerHTML=item[0]+"<div class='price'>"+item[1]+"</div>";
+
+div.onclick=function(){
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("selected"));
+div.classList.add("selected");
+
+// ✅ Store both versions: site text and WhatsApp text
+selectedPackage={
+site:item[0]+" — "+item[1],
+whatsapp:"💎 "+item[0]+" — ₹"+item[1].replace("₹","")
+};
+}
+
+container.appendChild(div);
+});
+
+}
+
+loadCategory('weekly',document.querySelector(".cat-btn"));
+
+function sendToWhatsApp(){
+
+var userId=document.getElementById("userid").value;
+var zoneId=document.getElementById("zoneid").value;
+var country=document.getElementById("country").value;
+
+if(userId==""||zoneId==""||country==""||selectedPackage==""){
+alert("Please complete all details!");
+return;
+}
+
+// Use WhatsApp version with emojis
+var message="Hello, I want MLBB Topup.\n\nUser ID: "
++userId+
+"\nZone ID: "+zoneId+
+"\nCountry: "+country+
+"\nPackage: "+selectedPackage.whatsapp;
+
+var url="https://wa.me/919862736836?text="+encodeURIComponent(message);
+
+window.open(url,"_blank");
+
+}
+
+</script>
+
+</body>
+</html>
