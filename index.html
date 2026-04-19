@@ -6,6 +6,48 @@
 <title>Diamond Topup</title>
 
 <style>
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: #1f1f1f;
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 85%;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+
+.modal-box h3 {
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.modal-box button {
+  margin-top: 15px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #d4af37;
+  color: black;
+  cursor: pointer;
+}
 body{
 margin:0;
 font-family:Arial;
@@ -92,7 +134,13 @@ font-weight:bold;
 </head>
 
 <body>
-
+<div id="customAlert" class="modal">
+  <div class="modal-box">
+    <h3>⚠️ Incomplete Details</h3>
+    <p>Please fill out all required fields before proceeding.</p>
+    <button onclick="closeAlert()">OK</button>
+  </div>
+</div>
 <div class="container">
 
 <h2>Enter Details</h2>
@@ -129,11 +177,11 @@ var selectedPackage="";
 var packages={
 // These are **for the site** — no emojis
 weekly:[
-["Weekly Pass 1x","₹148"],
-["Weekly Pass 2x","₹293"],
-["Weekly Pass 3x","₹438"],
-["Weekly Pass 4x","₹583"],
-["Weekly Pass 5x","₹728"],
+["Weekly Pass 1x","₹150"],
+["Weekly Pass 2x","₹300"],
+["Weekly Pass 3x","₹450"],
+["Weekly Pass 4x","₹600"],
+["Weekly Pass 5x","₹750"],
 ["Twilight Pass","₹802"]
 ],
 diamond:[
@@ -203,8 +251,8 @@ var zoneId=document.getElementById("zoneid").value;
 var country=document.getElementById("country").value;
 
 if(userId==""||zoneId==""||country==""||selectedPackage==""){
-alert("Please complete all details!");
-return;
+  showAlert();   // ✅ new alert
+  return;
 }
 
 // Use WhatsApp version with emojis
@@ -220,6 +268,15 @@ window.open(url,"_blank");
 
 }
 
+</script>
+<script>
+function showAlert() {
+  document.getElementById("customAlert").style.display = "flex";
+}
+
+function closeAlert() {
+  document.getElementById("customAlert").style.display = "none";
+}
 </script>
 
 </body>
